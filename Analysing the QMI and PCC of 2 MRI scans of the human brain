@@ -1,0 +1,153 @@
+im1=double(imread('T1.jpg'));
+im2=double(imread('T2.jpg'));
+
+% im2=255-im1;
+[H W]=size(im2);
+binwidth=10;
+
+v1=im1(:)-mean(im1(:));
+count=0;
+
+for tx= -10:10
+    im3=zeros(H,W);
+    
+    if tx>=0
+        im3(:,tx+1:W)=im2(:,1:W-tx);
+    else
+        im3(:,1:W+tx)=im2(:,abs(tx)+1:W);
+    end
+    
+    v3=im3(:)-mean(im3(:));
+    count=count+1;
+    cc(count)=dot(v1,v3)/(norm(v1)*norm(v3));
+ 
+    fprintf('\n%d %f',tx,cc(count));
+    
+    %join=q6_2(im1(:),im3(:),binwidth);
+    X1=im1(:);
+    X2=im3(:);
+
+X2=floor(X2/binwidth)+1;
+X1=floor(X1/binwidth)+1;
+
+%floor is to resize them to put in same histogram
+%x1 contains all elements of image 1 in single coolumn
+%new number of bins fo rnew histogram
+
+numbins=ceil(255/binwidth);
+
+n=length(X1);
+
+join=zeros(numbins);
+
+for i=1:n
+    join(X1(i),X2(i))=join(X1(i),X2(i))+1;
+end
+
+%make matrix for new histogram
+
+join=join/sum(join(:));
+    
+    p1=sum(join,1);
+    p2=sum(join,2);
+    numbins=length(p1);
+    p1p2=zeros(numbins);
+    for i=1:numbins
+        for j=1:numbins
+            p1p2(i,j)=p1(i)*p2(j);
+        end
+    end
+    QMI12(count)=sum(sum((join-p1p2).^2));
+    fprintf( '%',QMI12(count));
+end
+
+plot(-10:10,cc);
+title(sprintf('CC for im1 and im2',n));
+fname=sprintf('Q6_1a.png');
+saveas(gcf,fname);
+    %pause(5)
+pause(5);
+figure;
+plot(-10:10,QMI12);
+
+title(sprintf('QM1 for im1 and im2',n));
+fname1=sprintf('Q6_1b.png');
+saveas(gcf,fname1);
+pause(5);
+
+%im1=double(imread('T1.jpg'));
+%im2=double(imread('T2.jpg'));
+
+ im2=255-im1;
+[H W]=size(im2);
+binwidth=10;
+
+v1=im1(:)-mean(im1(:));
+count=0;
+
+for tx= -10:10
+    im3=zeros(H,W);
+    
+    if tx>=0
+        im3(:,tx+1:W)=im2(:,1:W-tx);
+    else
+        im3(:,1:W+tx)=im2(:,abs(tx)+1:W);
+    end
+    
+    v3=im3(:)-mean(im3(:));
+    count=count+1;
+    cc(count)=dot(v1,v3)/(norm(v1)*norm(v3));
+ 
+    fprintf('\n%d %f',tx,cc(count));
+    
+    %join=q6_2(im1(:),im3(:),binwidth);
+    X1=im1(:);
+    X2=im3(:);
+
+X2=floor(X2/binwidth)+1;
+X1=floor(X1/binwidth)+1;
+
+%floor is to resize them to put in same histogram
+%x1 contains all elements of image 1 in single coolumn
+%new number of bins fo rnew histogram
+
+numbins=ceil(255/binwidth);
+
+n=length(X1);
+
+join=zeros(numbins);
+
+for i=1:n
+    join(X1(i),X2(i))=join(X1(i),X2(i))+1;
+end
+
+%make matrix for new histogram
+
+join=join/sum(join(:));
+    
+    p1=sum(join,1);
+    p2=sum(join,2);
+    numbins=length(p1);
+    p1p2=zeros(numbins);
+    for i=1:numbins
+        for j=1:numbins
+            p1p2(i,j)=p1(i)*p2(j);
+        end
+    end
+    QMI12(count)=sum(sum((join-p1p2).^2));
+    fprintf( '%',QMI12(count));
+end
+
+plot(-10:10,cc);
+title(sprintf('CC for im1 and minus im1',n));
+fname=sprintf('Q6_2a.png');
+saveas(gcf,fname);
+    %pause(5)
+pause(5);
+figure;
+plot(-10:10,QMI12);
+
+title(sprintf('QM1 for im1 and minus im1',n));
+fname1=sprintf('Q6_2b.png');
+saveas(gcf,fname1);
+
